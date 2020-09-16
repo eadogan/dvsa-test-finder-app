@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../constants.dart';
 
 class UserDetailsScreen extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     String _buildDrivingLicenceNumber;
@@ -26,7 +27,7 @@ class UserDetailsScreen extends StatelessWidget {
                     TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
               ),
               SizedBox(height: size.height * 0.05),
-              new TextFormField(
+              TextFormField(
                 controller: licenceNumberController,
                 decoration: new InputDecoration(
                   labelText: "Licence Number",
@@ -35,7 +36,6 @@ class UserDetailsScreen extends StatelessWidget {
                     borderRadius: new BorderRadius.circular(25.0),
                     borderSide: new BorderSide(),
                   ),
-                  //fillColor: Colors.green
                 ),
                 validator: (val) {
                   if (val.length == 0) {
@@ -50,7 +50,7 @@ class UserDetailsScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(height: size.height * 0.05),
-              new TextFormField(
+              TextFormField(
                 controller: referenceNumberController,
                 decoration: new InputDecoration(
                   labelText: "Reference Number",
@@ -81,7 +81,7 @@ class UserDetailsScreen extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (context) =>
-                          new DataScreen(),
+                          new DataScreen(licenceNum: licenceNumberController.text,referenceNum: referenceNumberController.text,),
                     ),
                   );
                 },

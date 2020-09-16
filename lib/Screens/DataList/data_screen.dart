@@ -4,33 +4,39 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class DataScreen extends StatefulWidget {
-  final String value;
+  final String licenceNum;
+  final String referenceNum;
 
-  const DataScreen({Key key, this.value}) : super(key: key);
+  const DataScreen({Key key, this.licenceNum, this.referenceNum}) : super(key: key);
 
   @override
   _DataScreenState createState() => _DataScreenState();
 }
 
 class _DataScreenState extends State<DataScreen> {
-  String url = "http://dummy.restapiexample.com/api/v1/employees";
-
-  // String url = "http://localhost:8080/fndr-mng-svc/exams/${widget.value}/list";
   List dataList;
   var isLoading = false;
   var _center, _date;
+  bool _isVisible = true;
+  bool visibilityTag = false;
+  bool visibilityObs = false;
 
-  @override
   void initState() {
     super.initState();
     this.getJsonData();
+    isLoading = true;
   }
 
   Future<String> getJsonData() async {
-    final response = await http
-        .get(Uri.encodeFull(url), headers: {"Accept": "application/json"});
+    final response = await http.get(
+        // Uri.encodeFull("http://localhost:8576/fndr-mng-svc/exams/${widget.licenceNum}/${widget.referenceNum}/list"),
+        Uri.encodeFull("http://dummy.restapiexample.com/api/v1/employees"),
+        headers: {"Accept": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded"}
+    );
     setState(() {
       if (response.statusCode == 200) {
+        isLoading =  false;
         var convertJsonToData = json.decode(response.body);
         dataList = convertJsonToData['data'];
       } else {
@@ -43,54 +49,78 @@ class _DataScreenState extends State<DataScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Background(
         child: Scaffold(
-          backgroundColor: Colors.transparent,
-          appBar: AppBar(
             backgroundColor: Colors.transparent,
-            title: Text("Available Test Slot List"),
-          ),
-          body: isLoading
-              ? Center(
-                  child: CircularProgressIndicator(),
-                )
-              : ListView.builder(
-                  itemCount: dataList == null ? 0 : dataList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return new Container(
-                      child: new Center(
-                        child: new Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              title: Text("Available Test Slot List"),
+            ),
+            body: isLoading ? Center(child: CircularProgressIndicator()) : ListView.builder(
+                shrinkWrap: true,
+                itemCount: dataList == null ? 0 : dataList.length,
+                itemBuilder: (context, int index) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      new ExpansionTile(
+                      initiallyExpanded: false,
+                        // leading: Icon(Icons.all_inclusive),
+                        title: Column(
                           children: <Widget>[
-                            new Card(
-                                child: new ListTile(
-                                    title: new Text(
-                                        dataList[index]['employee_name']),
-                                    subtitle: new Text("Wood Green"),
-                                    onTap: () {
-                                      _showAlertDialog(context);
-                                      _center =
-                                          dataList[index]['employee_name'];
-                                      _date = dataList[index]['employee_age'];
-                                    },
-                                    leading: GestureDetector(
-                                      child: Container(
-                                        width: 0,
-                                        height: 48,
-                                        alignment: Alignment.bottomCenter,
-                                      ),
-                                    ))),
+                            new ListTile(
+                                title: new Text(dataList[index]['center']),
+                                subtitle: new Text("Test Center"),
+                                onTap: () {
+                                },
+                                leading: GestureDetector(
+                                  child: Container(
+                                    width: 0,
+                                    height: 50,
+                                    alignment: Alignment.bottomCenter,
+                                  ),
+                                )
+                            ),
                           ],
                         ),
+                        children: <Widget>[
+                          Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                  ListView.builder(
+                                    physics: ClampingScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemCount: dataList[index]['slot'].length,
+                                    itemBuilder: (context, int i) {
+                                      return new ListTile(
+                                          title: new Text(dataList[index]['slot'][i]),
+                                          onTap: () {
+                                            _showAlertDialog(context);
+                                            _center = dataList[index]['center'];
+                                            _date = dataList[index]['slot'][i];
+                                          },
+                                          leading: GestureDetector(
+                                            child: Container(
+                                              width: 0,
+                                              height: 50,
+                                              alignment: Alignment.bottomCenter,
+                                            ),
+                                          )
+                                      );
+                                    }
+                                  ),
+                                ]
+                          ),
+                        ],
                       ),
-                    );
-                  },
-                ),
+                    ],
+                  );
+                })
         ),
       ),
     );
+
   }
 
   _showAlertDialog(BuildContext context) {
@@ -104,13 +134,16 @@ class _DataScreenState extends State<DataScreen> {
     Widget continueButton = FlatButton(
       child: Text("Continue"),
       onPressed: () {
-        postRequestForSelectedData();
+        print(_center);
+        print(_date);
+
+        // postRequestForSelectedData();
       },
     );
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Alert Dialog"),
+      title: Text("Are you sure"),
       content: Text("Would you like to continue changing to your Test Date ?"),
       actions: [
         cancelButton,
@@ -141,7 +174,6 @@ class _DataScreenState extends State<DataScreen> {
     var response = await http.post(url,
         headers: {"Content-Type": "application/json"}, body: body);
 
-    print("burda miiiiiii");
     print("${response.statusCode}");
     print("${response.body}");
     print(response);
