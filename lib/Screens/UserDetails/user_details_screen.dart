@@ -27,33 +27,40 @@ class UserDetailsScreen extends StatelessWidget {
                     TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
               ),
               SizedBox(height: size.height * 0.05),
-              TextFormField(
-                controller: licenceNumberController,
-                decoration: new InputDecoration(
-                  labelText: "Licence Number",
-                  fillColor: Colors.white,
-                  border: new OutlineInputBorder(
-                    borderRadius: new BorderRadius.circular(25.0),
-                    borderSide: new BorderSide(),
+              Container(
+                width: size.width * 0.9,
+                child: TextFormField(
+                  controller: licenceNumberController,
+                  decoration: new InputDecoration(
+                    labelText: "Licence Number",
+                    hintText: "Eg MOLDA465387C99MT",
+                    fillColor: Colors.white,
+                    border: new OutlineInputBorder(
+                      borderRadius: new BorderRadius.circular(25.0),
+                      borderSide: new BorderSide(),
+                    ),
                   ),
-                ),
-                validator: (val) {
-                  if (val.length == 0) {
-                    return "Licence number cannot be empty";
-                  } else {
-                    return null;
-                  }
-                },
-                keyboardType: TextInputType.emailAddress,
-                style: new TextStyle(
-                  fontFamily: "Poppins",
+                  validator: (val) {
+                    if (val.length == 0) {
+                      return "Licence number cannot be empty";
+                    } else {
+                      return null;
+                    }
+                  },
+                  keyboardType: TextInputType.emailAddress,
+                  style: new TextStyle(
+                    fontFamily: "Poppins",
+                  ),
                 ),
               ),
               SizedBox(height: size.height * 0.05),
-              TextFormField(
+              Container(
+                width: size.width * 0.9,
+                  child: TextFormField(
                 controller: referenceNumberController,
                 decoration: new InputDecoration(
                   labelText: "Reference Number",
+                  hintText: "Eg 45069328",
                   fillColor: Colors.white,
                   border: new OutlineInputBorder(
                     borderRadius: new BorderRadius.circular(25.0),
@@ -72,7 +79,7 @@ class UserDetailsScreen extends StatelessWidget {
                 style: new TextStyle(
                   fontFamily: "Poppins",
                 ),
-              ),
+              )),
               SizedBox(height: size.height * 0.05),
               RoundedButton(
                 text: "Find me a test",
@@ -124,29 +131,4 @@ class UserDetailsScreen extends StatelessWidget {
       throw 'Could not launch $url';
     }
   }
-
-// Future<http.Response> postRequestForSelectedData() async {
-//
-//   Map data = {
-//     "licenceNumber": _center,
-//     "referenceNumber": _date,
-//   };
-//
-//   //encode Map to JSON
-//   // var body = json.encode(data);
-//   var uri = Uri.https('http://localhost:8080/fndr-mng-svc/exams', '/{licenceNumber}/{referenceNumber}/list', data);
-//   var response = await http.get(
-//       url,
-//       headers: {"Content-Type": "application/json"},
-//       data
-//   );
-//
-//
-//
-//   print("burda miiiiiii");
-//   print("${response.statusCode}");
-//   print("${response.body}");
-//   print(response);
-//   return response;
-// }
 }

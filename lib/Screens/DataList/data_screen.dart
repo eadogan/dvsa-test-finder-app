@@ -57,7 +57,8 @@ class _DataScreenState extends State<DataScreen> {
               backgroundColor: Colors.transparent,
               title: Text("Available Test Slot List"),
             ),
-            body: isLoading ? Center(child: CircularProgressIndicator()) : ListView.builder(
+            body: isLoading ? Center(child: CircularProgressIndicator()) :
+            ListView.builder(
                 shrinkWrap: true,
                 itemCount: dataList == null ? 0 : dataList.length,
                 itemBuilder: (context, int index) {
@@ -66,7 +67,7 @@ class _DataScreenState extends State<DataScreen> {
                     children: <Widget>[
                       new ExpansionTile(
                       initiallyExpanded: false,
-                        // leading: Icon(Icons.all_inclusive),
+                        leading: Icon(Icons.view_list),
                         title: Column(
                           children: <Widget>[
                             new ListTile(
@@ -93,7 +94,14 @@ class _DataScreenState extends State<DataScreen> {
                                     shrinkWrap: true,
                                     itemCount: dataList[index]['slot'].length,
                                     itemBuilder: (context, int i) {
-                                      return new ListTile(
+                                      return Card(
+                                        shape: StadiumBorder(
+                                          side: BorderSide(
+                                            color: Colors.black,
+                                            width: 0.5,
+                                          ),
+                                        ),
+                                        child: ListTile(
                                           title: new Text(dataList[index]['slot'][i]),
                                           onTap: () {
                                             _showAlertDialog(context);
@@ -107,6 +115,7 @@ class _DataScreenState extends State<DataScreen> {
                                               alignment: Alignment.bottomCenter,
                                             ),
                                           )
+                                        ),
                                       );
                                     }
                                   ),
@@ -161,7 +170,7 @@ class _DataScreenState extends State<DataScreen> {
   }
 
   Future<http.Response> postRequestForSelectedData() async {
-    var url = 'http://localhost:8080/fndr-mng-svc/axams/change-slot';
+    var url = 'http://10.0.2.2:8576/fndr-mng-svc/exams/change-slot';
 
     Map data = {
       "center": _center,
