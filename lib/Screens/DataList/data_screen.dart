@@ -17,7 +17,6 @@ class _DataScreenState extends State<DataScreen> {
   List dataList;
   var isLoading = false;
   var _center, _date;
-  bool _isVisible = true;
   bool visibilityTag = false;
   bool visibilityObs = false;
 
@@ -29,8 +28,8 @@ class _DataScreenState extends State<DataScreen> {
 
   Future<String> getJsonData() async {
     final response = await http.get(
-        // Uri.encodeFull("http://localhost:8576/fndr-mng-svc/exams/${widget.licenceNum}/${widget.referenceNum}/list"),
-        Uri.encodeFull("http://dummy.restapiexample.com/api/v1/employees"),
+        Uri.encodeFull("http://10.0.2.2:8576/fndr-mng-svc/exams/${widget.licenceNum}/${widget.referenceNum}/list"),
+        // Uri.encodeFull("http://dummy.restapiexample.com/api/v1/employees"),
         headers: {"Accept": "application/json",
           "Content-Type": "application/x-www-form-urlencoded"}
     );
@@ -46,90 +45,92 @@ class _DataScreenState extends State<DataScreen> {
 
     return "Success";
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Background(
-        child: Scaffold(
-            backgroundColor: Colors.transparent,
-            appBar: AppBar(
+        child: WillPopScope(
+          onWillPop: () async => false,
+          child: Scaffold(
               backgroundColor: Colors.transparent,
-              title: Text("Available Test Slot List"),
-            ),
+              appBar: AppBar(
+                backgroundColor: Colors.transparent,
+                title: Text("Available Test Slot List"),
+                automaticallyImplyLeading: false,
+              ),
             body: isLoading ? Center(child: CircularProgressIndicator()) :
             ListView.builder(
-                shrinkWrap: true,
-                itemCount: dataList == null ? 0 : dataList.length,
-                itemBuilder: (context, int index) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      new ExpansionTile(
-                      initiallyExpanded: false,
-                        leading: Icon(Icons.view_list),
-                        title: Column(
+                  shrinkWrap: true,
+                  itemCount: dataList == null ? 0 : dataList.length,
+                  itemBuilder: (context, int index) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        new ExpansionTile(
+                        initiallyExpanded: false,
+                          // leading: Icon(Icons.view_list),
+                          title: Column(
+                            children: <Widget>[
+                              new ListTile(
+                                  title: new Text(dataList[index]['center']),
+                                  subtitle: new Text("Test Center"),
+                                  onTap: () {
+                                  },
+                                  leading: GestureDetector(
+                                    child: Container(
+                                      width: 0,
+                                      height: 50,
+                                      alignment: Alignment.bottomCenter,
+                                    ),
+                                  )
+                              ),
+                            ],
+                          ),
                           children: <Widget>[
-                            new ListTile(
-                                title: new Text(dataList[index]['center']),
-                                subtitle: new Text("Test Center"),
-                                onTap: () {
-                                },
-                                leading: GestureDetector(
-                                  child: Container(
-                                    width: 0,
-                                    height: 50,
-                                    alignment: Alignment.bottomCenter,
-                                  ),
-                                )
+                            Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                    ListView.builder(
+                                      physics: ClampingScrollPhysics(),
+                                      shrinkWrap: true,
+                                      itemCount: dataList[index]['slot'].length,
+                                      itemBuilder: (context, int i) {
+                                        return Card(
+                                          // shape: StadiumBorder(
+                                          //   side: BorderSide(
+                                          //     color: Colors.black,
+                                          //     width: 0.02,
+                                          //   ),
+                                          // ),
+                                          child: ListTile(
+                                            title: new Text(dataList[index]['slot'][i]),
+                                            onTap: () {
+                                              _showAlertDialog(context);
+                                              _center = dataList[index]['center'];
+                                              _date = dataList[index]['slot'][i];
+                                            },
+                                            leading: GestureDetector(
+                                              child: Container(
+                                                width: 0,
+                                                height: 50,
+                                                alignment: Alignment.bottomCenter,
+                                              ),
+                                            )
+                                          ),
+                                        );
+                                      }
+                                    ),
+                                  ]
                             ),
                           ],
                         ),
-                        children: <Widget>[
-                          Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                  ListView.builder(
-                                    physics: ClampingScrollPhysics(),
-                                    shrinkWrap: true,
-                                    itemCount: dataList[index]['slot'].length,
-                                    itemBuilder: (context, int i) {
-                                      return Card(
-                                        shape: StadiumBorder(
-                                          side: BorderSide(
-                                            color: Colors.black,
-                                            width: 0.5,
-                                          ),
-                                        ),
-                                        child: ListTile(
-                                          title: new Text(dataList[index]['slot'][i]),
-                                          onTap: () {
-                                            _showAlertDialog(context);
-                                            _center = dataList[index]['center'];
-                                            _date = dataList[index]['slot'][i];
-                                          },
-                                          leading: GestureDetector(
-                                            child: Container(
-                                              width: 0,
-                                              height: 50,
-                                              alignment: Alignment.bottomCenter,
-                                            ),
-                                          )
-                                        ),
-                                      );
-                                    }
-                                  ),
-                                ]
-                          ),
-                        ],
-                      ),
-                    ],
-                  );
-                })
+                      ],
+                    );
+                  }),
+          ),
         ),
       ),
     );
-
   }
 
   _showAlertDialog(BuildContext context) {
