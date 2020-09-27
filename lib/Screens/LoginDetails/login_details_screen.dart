@@ -1,12 +1,12 @@
 import 'package:dvsa_app/Screens/DataList/data_screen.dart';
 import 'package:dvsa_app/Screens/Tabs/tabs_screen.dart';
-import 'package:dvsa_app/Screens/UserDetails/components/background.dart';
+import 'package:dvsa_app/Screens/LoginDetails/components/background.dart';
 import 'package:dvsa_app/components/rounded_button.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../constants.dart';
 
-class UserDetailsScreen extends StatelessWidget {
+class LoginDetailsScreen extends StatelessWidget {
   TextEditingController licenceNumberController = new TextEditingController();
   TextEditingController referenceNumberController = new TextEditingController();
 
