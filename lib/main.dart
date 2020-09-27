@@ -1,6 +1,6 @@
 import 'package:dvsa_app/constants.dart';
 import 'package:flutter/material.dart';
-import 'Screens/UserDetails/user_details_screen.dart';
+import 'Screens/LoginDetails/login_details_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
         primaryColor: kPrimaryColor,
         scaffoldBackgroundColor: Colors.white
       ),
-      home: UserDetailsScreen(),
+      home: LoginDetailsScreen(),
     );
   }
 }
